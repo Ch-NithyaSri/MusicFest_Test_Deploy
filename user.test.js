@@ -1,6 +1,5 @@
 const User = require('./models/User');
-
-// Mock the Sequelize methods manually using jest.fn()
+//mock
 jest.mock('./models/User', () => {
   return {
     create: jest.fn(),
@@ -12,7 +11,6 @@ jest.mock('./models/User', () => {
 
 describe('User Model', () => {
   beforeEach(() => {
-    // Clear all mocks before each test
     jest.clearAllMocks();
   });
 
@@ -25,7 +23,6 @@ describe('User Model', () => {
       password: 'Test@123',
     };
 
-    // Mock create to resolve with the mock user
     User.create.mockResolvedValue(mockUser);
 
     const user = await User.create({
@@ -45,7 +42,6 @@ describe('User Model', () => {
       { userName: 'testUser2', emailID: 'user2@example.com' },
     ];
 
-    // Mock findAll to return the mock users list
     User.findAll.mockResolvedValue(mockUsers);
 
     const users = await User.findAll();
@@ -55,29 +51,23 @@ describe('User Model', () => {
 
   it('should update user email', async () => {
     const newEmail = 'newemail@example.com';
-  
-    // Define the mock user first
+
     const mockUser = {
       userName: 'testUser',
       emailID: 'oldemail@example.com',
     };
   
-    // Mock the save method to return a new object with the updated email
     mockUser.save = jest.fn().mockResolvedValue({ ...mockUser, emailID: newEmail });
   
-    // Mock findByPk to return the mock user
     User.findByPk.mockResolvedValue(mockUser);
   
-    // Find the user by primary key (username)
     const user = await User.findByPk('testUser');
   
-    // Simulate updating the user's email
     user.emailID = newEmail;
     await user.save();
   
-    // Assert that the save method was called and the email was updated
     expect(user.save).toHaveBeenCalled();
-    expect(user.emailID).toBe(newEmail);  // Assert that the emailID is now the new email
+    expect(user.emailID).toBe(newEmail); 
   });
   
 
@@ -90,13 +80,10 @@ describe('User Model', () => {
       destroy: jest.fn().mockResolvedValue(true),
     };
 
-    // Mock findByPk to return the mock user
     User.findByPk.mockResolvedValue(mockUser);
 
-    // Simulate deleting the user
     await mockUser.destroy();
 
-    // Assert that the destroy method was called
     expect(mockUser.destroy).toHaveBeenCalled();
   });
 });
